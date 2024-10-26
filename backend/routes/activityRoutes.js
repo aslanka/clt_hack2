@@ -5,4 +5,6 @@ const activityController = require('../controllers/activityController');
 // Route to add a new activity
 router.post('/add', activityController.addActivity);
 
+router.get();
+
 module.exports = router;
