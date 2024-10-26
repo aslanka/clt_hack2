@@ -1,20 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const activityController = require('../controllers/activityController');
+const verifyToken = require('../server'); // Adjust the path as needed
 
-// Route to add a new activity
-router.post('/add', activityController.addActivity);
+// Protected route to add a new activity
+router.post('/add', verifyToken, activityController.addActivity);
 
-// Route to get all activities
+// Public route to get all activities
 router.get('/all', activityController.getAllActivities);
 
-// Route to get an activity by ID
-router.get('/:activity_id', activityController.getActivityById);
-
-// Route to update an activity by ID
-router.put('/:activity_id', activityController.updateActivity);
-
-// Route to delete an activity by ID
-router.delete('/:activity_id', activityController.deleteActivity);
+// Protected routes
+router.get('/:activity_id', verifyToken, activityController.getActivityById);
+router.put('/:activity_id', verifyToken, activityController.updateActivity);
+router.delete('/:activity_id', verifyToken, activityController.deleteActivity);
 
 module.exports = router;

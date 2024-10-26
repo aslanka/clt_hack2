@@ -8,6 +8,7 @@
     const activityRoutes = require('./routes/activityRoutes');
     const rewardRoutes = require('./routes/rewardRoutes');
     const userPointsRoutes = require('./routes/userPointsRoutes');
+    const imageRoutes = require('./routes/imageRoutes');
     require('dotenv').config();
 
     // Initialize the app
@@ -28,7 +29,7 @@
     app.use('/activities', activityRoutes); 
     app.use('/rewards', rewardRoutes); 
     app.use('/userPoints', userPointsRoutes);
-  
+    app.use('/image', imageRoutes);
 
     function verifyToken(req, res, next) {
         const authHeader = req.headers.authorization;
@@ -49,6 +50,8 @@
           next();
         });
       }
+
+    module.exports = verifyToken;
 
       // app.post('/login', (req, res) => {
       //   const { username, password } = req.body;

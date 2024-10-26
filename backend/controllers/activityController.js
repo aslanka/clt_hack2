@@ -1,3 +1,4 @@
+// controllers/activityController.js
 const Activity = require('../models/Activity');
 
 // Controller to add a new activity
