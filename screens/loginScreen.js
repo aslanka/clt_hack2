@@ -6,16 +6,18 @@ import { useNavigation } from '@react-navigation/native';
 import ActivityScreen from './ActivityScreen'
 
 const LoginScreen = () => {
-  const navigation = useNavigation();
+
   const { login } = useContext(AuthContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
 
+
   
   const handleLogin = () => {
     login(username, password);
-    navigation.navigate('ActivityScreen')
+
+
   };
 
   return (
