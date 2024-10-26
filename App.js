@@ -3,12 +3,14 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
+
 import MainTabs from './screens/MainTabs';
 
 import LoginScreen from './screens/LoginScreen';
 import ActivityScreen from './screens/ActivityScreen'
 // import HomeScreen from './screens/HomeScreen';  // Uncomment this if HomeScreen is defined
 import { AuthProvider, AuthContext } from './context/AuthContext'; // Import AuthProvider
+
 
 const Stack = createNativeStackNavigator();
 
@@ -52,6 +54,7 @@ const AppNavigator = () => {
 
 export default function App() {
   return (
+
  
       <AuthProvider>
         <NavigationContainer>
@@ -61,6 +64,7 @@ export default function App() {
         </NavigationContainer>
       </AuthProvider>
     
+
   );
 }
 
