@@ -16,6 +16,8 @@ const leaderboardRoutes = require('./routes/leaderboardRoutes');
     const PORT = 3000;
 
     const JWT_SECRET = 'your_jwt_secret_key';
+    const ADMIN_USERNAME = 'admin';
+const ADMIN_PASSWORD = 'password123';
 
 
     // Middleware to parse JSON requests
@@ -29,6 +31,7 @@ const leaderboardRoutes = require('./routes/leaderboardRoutes');
 
     function verifyToken(req, res, next) {
         const authHeader = req.headers.authorization;
+        console.log(authHeader)
         if (!authHeader) {
           return res.status(401).send('Unauthorized: No token provided');
         }
@@ -47,19 +50,31 @@ const leaderboardRoutes = require('./routes/leaderboardRoutes');
         });
       }
 
-      // app.post('/login', (req, res) => {
-      //   const { username, password } = req.body;
-      //   // const user = users.find(
-      //   //   (u) => u.username === username && u.password === password
-      //   // );
+      app.post('/login', (req, res) => {
+        const { username, password } = req.body;
+        // const user = users.find(
+        //   (u) => u.username === username && u.password === password
+        // );
       
-      //   if (true) {
-      //     const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
-      //     res.json({ token });
-      //   } else {
-      //     res.status(401).json({ message: 'Invalid credentials' });
-      //   }
-      // });
+        if (true) {
+          const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
+          res.json({ token });
+        } else {
+          res.status(401).json({ message: 'Invalid credentials' });
+        }
+      });
       app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });
+    // Admin login route
+app.post('/admin/login', (req, res) => {
+  const { username, password } = req.body;
+
+  // Check if the credentials match the hardcoded admin credentials
+  if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+      const token = jwt.sign({ userId: 1, role: 'admin' }, JWT_SECRET, { expiresIn: '1h' });
+      res.json({ token });
+  } else {
+      res.status(401).json({ message: 'Invalid credentials' });
+  }
+});
