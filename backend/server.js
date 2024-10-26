@@ -24,7 +24,7 @@ const leaderboardRoutes = require('./routes/leaderboardRoutes');
     app.use(cors());
     app.use(bodyParser.json());
     app.use('/users', userRoutes);
-    app.use('/activities', verifyToken, activityRoutes); 
+    app.use('/activities', activityRoutes); 
     app.use('/leaderboard', leaderboardRoutes);
 
     function verifyToken(req, res, next) {
