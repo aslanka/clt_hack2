@@ -3,6 +3,8 @@
     const bodyParser = require('body-parser');
     const cors = require('cors');
     const jwt = require('jsonwebtoken');
+    const bcrypt = require('bcrypt');
+
     const db = require('./config/db'); // Import database connection
     const userRoutes = require('./routes/userRoutes');
     const activityRoutes = require('./routes/activityRoutes');
@@ -12,6 +14,8 @@
 
     // Initialize the app
     const app = express();
+
+
 
     // Set the port from environment variable or default to 3000
     const PORT = 3000;
@@ -53,26 +57,93 @@ const ADMIN_PASSWORD = 'password123';
         });
       }
 
+
+      app.post('/signup', (req, res) => {
+        const { username, full_name, academic_year, email, password } = req.body;
+      
+        // Check if the user already exists
+        db.query('SELECT * FROM User WHERE username = ?', [username], (err, results) => {
+          if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ message: 'Internal server error' });
+          }
+      
+          if (results.length > 0) {
+            // User already exists
+            return res.status(409).json({ message: 'Username already taken' });
+          }
+      
+          // Hash the password before storing it
+          bcrypt.hash(password, 10, (err, hashedPassword) => {
+            if (err) {
+              console.error('Error hashing password:', err);
+              return res.status(500).json({ message: 'Internal server error' });
+            }
+      
+            // Insert the new user into the database
+            const newUser = { username, full_name, academic_year, email, password_hashed: hashedPassword };
+            db.query('INSERT INTO User SET ?', newUser, (err, results) => {
+              if (err) {
+                console.error('Error inserting user:', err);
+                return res.status(500).json({ message: 'Internal server error' });
+              }
+      
+              // Optionally, generate a token for the new user
+              const token = jwt.sign({ userId: results.insertId }, JWT_SECRET, { expiresIn: '10s' });
+      
+              res.status(201).json({ token });
+            });
+          });
+        });
+      });
+      
+
+
+
+
+
+
+
+
+
+
       app.post('/login', (req, res) => {
         const { username, password } = req.body;
-        // const user = users.find(
-        //   (u) => u.username === username && u.password === password
-        // );
+
+        // Query to find the user by username
+        db.query('SELECT * FROM User WHERE username = ?', [username], (err, results) => {
+          if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ message: 'Internal server error' });
+          }
       
-        if (true) {
-          // const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
-          const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '10s' });
-
-
-          res.json({ token });
-        } else {
-          res.status(401).json({ message: 'Invalid credentials' });
-        }
+          if (results.length === 0) {
+            // User not found
+            return res.status(401).json({ message: 'Invalid credentials' });
+          }
+      
+          const user = results[0];
+      
+          // Compare the provided password with the hashed password in the database
+          bcrypt.compare(password, user.password_hashed, (err, isMatch) => {
+            if (err) {
+              console.error('Error comparing passwords:', err);
+              return res.status(500).json({ message: 'Internal server error' });
+            }
+      
+            if (!isMatch) {
+              // Invalid password
+              return res.status(401).json({ message: 'Invalid credentials' });
+            }
+      
+            // Generate JWT token if credentials are valid
+            const token = jwt.sign({ userId: user.user_id }, JWT_SECRET, { expiresIn: '10s' });
+            console.log(user.user_id)
+            res.json({ token, userId: user.user_id });
+          });
+        });
       });
-      app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
-    });
-    // Admin login route
+
 app.post('/admin/login', (req, res) => {
   const { username, password } = req.body;
 
@@ -83,4 +154,8 @@ app.post('/admin/login', (req, res) => {
   } else {
       res.status(401).json({ message: 'Invalid credentials' });
   }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
