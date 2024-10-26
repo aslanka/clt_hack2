@@ -8,7 +8,7 @@ const UserPoints = {
     },
 
     // Get all points for a specific user
-    getByUserId: (user_id, callback) => {
+    getPointsByUserId: (user_id, callback) => {
         const query = 'SELECT * FROM User_Points WHERE user_id = ?';
         db.query(query, [user_id], callback);
     },
