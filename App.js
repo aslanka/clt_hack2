@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-
+import MainTabs from './screens/MainTabs';
 
 import LoginScreen from './screens/LoginScreen';
 import ActivityScreen from './screens/ActivityScreen'
@@ -18,19 +18,35 @@ const AppNavigator = () => {
 
 
   return (
-    <Stack.Navigator initialRouteName={userToken ? "ActivityScreen" : "LoginScreen"}>
-    <Stack.Screen 
-      name="LoginScreen" 
-      component={LoginScreen} 
-      options={{ headerShown: false }} 
-    />
-     <Stack.Screen 
-      name="ActivityScreen" 
-      component={ActivityScreen} 
-      options={{ headerShown: false }} 
-    />
-
-  </Stack.Navigator>
+    <Stack.Navigator initialRouteName={userToken ? "Main" : "LoginScreen"}>
+      {userToken ? (
+        <>
+          <Stack.Screen
+            name="Main"
+            component={MainTabs}
+            options={{ headerShown: false }}
+          />
+          {/* <Stack.Screen
+            name="Profile"
+            component={ProfileScreen}
+            options={{ title: 'Profile' }}
+          /> */}
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            name="LoginScreen"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+          {/* <Stack.Screen
+            name="SignUp"
+            component={SignUpScreen}
+            options={{ title: 'Sign Up' }}
+          /> */}
+        </>
+      )}
+    </Stack.Navigator>
   );
 };
 
