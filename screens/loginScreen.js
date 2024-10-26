@@ -7,11 +7,11 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
 
   const navigation = useNavigation();
-  
+
   const handleLogin = () => {
     // Handle login logic
      console.log("Email:", email, "Password:", password);
-     navigation.navigate('Activity');
+     navigation.navigate('DashBoard');
 
   };
 
