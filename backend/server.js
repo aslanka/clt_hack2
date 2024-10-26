@@ -4,9 +4,10 @@
     const cors = require('cors');
     const jwt = require('jsonwebtoken');
     const db = require('./config/db'); // Import database connection
-const userRoutes = require('./routes/userRoutes');
-const activityRoutes = require('./routes/activityRoutes');
-const leaderboardRoutes = require('./routes/leaderboardRoutes');
+    const userRoutes = require('./routes/userRoutes');
+    const activityRoutes = require('./routes/activityRoutes');
+    const rewardRoutes = require('./routes/rewardRoutes');
+    const userPointsRoutes = require('./routes/userPointsRoutes');
     require('dotenv').config();
 
     // Initialize the app
@@ -24,8 +25,10 @@ const leaderboardRoutes = require('./routes/leaderboardRoutes');
     app.use(cors());
     app.use(bodyParser.json());
     app.use('/users', userRoutes);
-    app.use('/activities', verifyToken, activityRoutes); 
-    app.use('/leaderboard', leaderboardRoutes);
+    app.use('/activities', activityRoutes); 
+    app.use('/rewards', rewardRoutes); 
+    app.use('/userPoints', userPointsRoutes);
+  
 
     function verifyToken(req, res, next) {
         const authHeader = req.headers.authorization;
