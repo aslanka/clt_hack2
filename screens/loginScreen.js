@@ -1,117 +1,95 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+// screens/LoginScreen.js
+import React, { useContext, useState } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { AuthContext } from '../context/AuthContext';
+import { useNavigation } from '@react-navigation/native';
+import ActivityScreen from './ActivityScreen'
 
-export default function LoginScreen() {
-  const [email, setEmail] = useState('');
+const LoginScreen = () => {
+  const navigation = useNavigation();
+  const { login } = useContext(AuthContext);
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+
+  
   const handleLogin = () => {
-    // Handle login logic
-    console.log("Email:", email, "Password:", password);
+    login(username, password);
+    navigation.navigate('ActivityScreen')
   };
 
   return (
     <View style={styles.container}>
-      <Image 
-        source={{ uri: 'https://example.com/your-logo.png' }} // Replace with your logo URL
-        style={styles.logo}
-      />
-      <Text style={styles.title}>Welcome Back!</Text>
-
+      <Text style={styles.title}>Login</Text>
       <TextInput
         style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
+        placeholder="Username"
+        placeholderTextColor="#888"
+        value={username}
+        onChangeText={setUsername}
       />
-
       <TextInput
         style={styles.input}
         placeholder="Password"
+        placeholderTextColor="#888"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
-
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Log In</Text>
+        <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => alert('Forgot Password')}>
-        <Text style={styles.forgotPassword}>Forgot Password?</Text>
-      </TouchableOpacity>
-
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>Don't have an account? </Text>
-        <TouchableOpacity onPress={() => alert('Sign Up')}>
-          <Text style={styles.signupText}>Sign Up</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 30,
-  },
-  logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
-    borderRadius: 50,
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    padding: 16,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 30,
+    marginBottom: 32,
     color: '#333',
   },
   input: {
-    width: '100%',
+    width: '80%',
     height: 50,
-    borderColor: '#ccc',
-    borderWidth: 1,
+    backgroundColor: '#fff',
     borderRadius: 8,
-    paddingHorizontal: 10,
-    marginVertical: 10,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+    fontSize: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
   },
   button: {
-    backgroundColor: '#1E90FF',
-    width: '100%',
+    width: '80%',
     height: 50,
+    backgroundColor: '#4CAF50',
     borderRadius: 8,
-    alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 5,
+    marginTop: 16,
   },
   buttonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
   },
-  forgotPassword: {
-    color: '#1E90FF',
-    marginTop: 15,
-    fontSize: 14,
-  },
-  footer: {
-    flexDirection: 'row',
-    marginTop: 30,
-  },
-  footerText: {
-    fontSize: 14,
-    color: '#666',
-  },
-  signupText: {
-    fontSize: 14,
-    color: '#1E90FF',
-    fontWeight: 'bold',
-  },
 });
+
+export default LoginScreen;
