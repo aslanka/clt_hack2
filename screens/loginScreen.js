@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigation = useNavigation();
+  
   const handleLogin = () => {
     // Handle login logic
-    console.log("Email:", email, "Password:", password);
+     console.log("Email:", email, "Password:", password);
+     navigation.navigate('Activity');
+
   };
 
   return (
