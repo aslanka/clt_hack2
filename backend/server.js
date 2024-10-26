@@ -1,61 +1,31 @@
-<<<<<<< HEAD
-// server.js
-const express = require('express');
-const db = require('./config/db'); // Import database connection
-const userRoutes = require('./routes/userRoutes');
-const activityRoutes = require('./routes/activityRoutes');
-const leaderboardRoutes = require('./routes/leaderboardRoutes');
-require('dotenv').config();
-=======
     // server.js
     const express = require('express');
     const bodyParser = require('body-parser');
     const cors = require('cors');
     const jwt = require('jsonwebtoken');
+    const db = require('./config/db'); // Import database connection
+const userRoutes = require('./routes/userRoutes');
+const activityRoutes = require('./routes/activityRoutes');
+const leaderboardRoutes = require('./routes/leaderboardRoutes');
     require('dotenv').config();
->>>>>>> main
 
     // Initialize the app
     const app = express();
 
-<<<<<<< HEAD
-// Set the port from environment variable or default to 3000
-const PORT = process.env.PORT || 3000;
-=======
     // Set the port from environment variable or default to 3000
     const PORT = 3000;
->>>>>>> main
 
     const JWT_SECRET = 'your_jwt_secret_key';
 
-<<<<<<< HEAD
-// Example route
-app.get('/api/example', (req, res) => {
-    res.json({ message: 'Hello from the single-file server!' });
-});
-
-// Define routes for each feature
-app.use('/users', userRoutes);
-app.use('/activities', activityRoutes);
-app.use('/leaderboard', leaderboardRoutes);
-
-// Fallback error handler
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ error: err });
-});
-
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-=======
 
     // Middleware to parse JSON requests
     app.use(express.json());
 
     app.use(cors());
     app.use(bodyParser.json());
+    app.use('/users', userRoutes);
+    app.use('/activities', verifyToken, activityRoutes); 
+    app.use('/leaderboard', leaderboardRoutes);
 
     function verifyToken(req, res, next) {
         const authHeader = req.headers.authorization;
@@ -77,17 +47,19 @@ app.listen(PORT, () => {
         });
       }
 
-      app.post('/login', (req, res) => {
-        const { username, password } = req.body;
-        // const user = users.find(
-        //   (u) => u.username === username && u.password === password
-        // );
+      // app.post('/login', (req, res) => {
+      //   const { username, password } = req.body;
+      //   // const user = users.find(
+      //   //   (u) => u.username === username && u.password === password
+      //   // );
       
-        if (true) {
-          const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
-          res.json({ token });
-        } else {
-          res.status(401).json({ message: 'Invalid credentials' });
-        }
-      });
->>>>>>> main
+      //   if (true) {
+      //     const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
+      //     res.json({ token });
+      //   } else {
+      //     res.status(401).json({ message: 'Invalid credentials' });
+      //   }
+      // });
+      app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
