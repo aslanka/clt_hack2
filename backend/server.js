@@ -3,6 +3,10 @@
     const bodyParser = require('body-parser');
     const cors = require('cors');
     const jwt = require('jsonwebtoken');
+    const db = require('./config/db'); // Import database connection
+const userRoutes = require('./routes/userRoutes');
+const activityRoutes = require('./routes/activityRoutes');
+const leaderboardRoutes = require('./routes/leaderboardRoutes');
     require('dotenv').config();
 
     // Initialize the app
@@ -19,6 +23,9 @@
 
     app.use(cors());
     app.use(bodyParser.json());
+    app.use('/users', userRoutes);
+    app.use('/activities', verifyToken, activityRoutes); 
+    app.use('/leaderboard', leaderboardRoutes);
 
     function verifyToken(req, res, next) {
         const authHeader = req.headers.authorization;
@@ -40,16 +47,19 @@
         });
       }
 
-      app.post('/login', (req, res) => {
-        const { username, password } = req.body;
-        // const user = users.find(
-        //   (u) => u.username === username && u.password === password
-        // );
+      // app.post('/login', (req, res) => {
+      //   const { username, password } = req.body;
+      //   // const user = users.find(
+      //   //   (u) => u.username === username && u.password === password
+      //   // );
       
-        if (true) {
-          const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
-          res.json({ token });
-        } else {
-          res.status(401).json({ message: 'Invalid credentials' });
-        }
-      });
+      //   if (true) {
+      //     const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
+      //     res.json({ token });
+      //   } else {
+      //     res.status(401).json({ message: 'Invalid credentials' });
+      //   }
+      // });
+      app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
