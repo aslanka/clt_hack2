@@ -59,7 +59,7 @@ const ADMIN_PASSWORD = 'password123';
 
 
       app.post('/signup', (req, res) => {
-        const { username, full_name, academic_year, email, password } = req.body;
+        const { username, full_name, academic_year, email, password, profile_uri } = req.body;
       
         // Check if the user already exists
         db.query('SELECT * FROM User WHERE username = ?', [username], (err, results) => {
@@ -81,7 +81,7 @@ const ADMIN_PASSWORD = 'password123';
             }
       
             // Insert the new user into the database
-            const newUser = { username, full_name, academic_year, email, password_hashed: hashedPassword };
+            const newUser = { username, full_name, academic_year, email, password_hashed: hashedPassword , profile_uri};
             db.query('INSERT INTO User SET ?', newUser, (err, results) => {
               if (err) {
                 console.error('Error inserting user:', err);
