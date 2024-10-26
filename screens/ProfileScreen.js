@@ -1,18 +1,39 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { ProgressBar } from 'react-native-paper';
 
 const ProfileScreen = () => {
   const user = {
     name: 'Dhruv Mukherjee',
-    email: 'dhruvmukherjee@example.com',
-    avatar: 'https://example.com/path/to/avatar.jpg', // Replace with your avatar URL
+    username: 'dmukherjee',
+    avatar: 'https://example.com/path/to/avatar.jpg',
+    year: 'Junior',
+    points: 120 // Example: user's current points
   };
+
+  // Rewards milestones
+  const milestones = [
+    { points: 50, label: 'Starter' },
+    { points: 100, label: 'Bronze' },
+    { points: 200, label: 'Silver' },
+    { points: 300, label: 'Gold' },
+    { points: 500, label: 'Platinum' },
+  ];
+
+  // Find current milestone progress
+  const currentMilestoneIndex = milestones.findIndex(m => user.points < m.points);
+  const nextMilestone = milestones[currentMilestoneIndex] || milestones[milestones.length - 1];
+  const previousMilestone = milestones[currentMilestoneIndex - 1] || { points: 0 };
+
+  // Calculate progress towards the next milestone
+  const progress = (user.points - previousMilestone.points) / (nextMilestone.points - previousMilestone.points);
 
   return (
     <View style={styles.container}>
       <Image source={{ uri: user.avatar }} style={styles.avatar} />
       <Text style={styles.name}>{user.name}</Text>
-      <Text style={styles.email}>{user.email}</Text>
+      <Text style={styles.username}>{user.username}</Text>
+      <Text style={styles.username}>{user.year}</Text>
 
       <TouchableOpacity style={styles.button} onPress={() => alert('Edit Profile')}>
         <Text style={styles.buttonText}>Edit Profile</Text>
@@ -21,6 +42,33 @@ const ProfileScreen = () => {
       <TouchableOpacity style={[styles.button, styles.logoutButton]} onPress={() => alert('Logged Out')}>
         <Text style={styles.buttonText}>Log Out</Text>
       </TouchableOpacity>
+
+      {/* Rewards Timeline */}
+      <View style={styles.timelineContainer}>
+        <Text style={styles.rewardsHeader}>Rewards Timeline</Text>
+        
+        {/* Milestone stops */}
+        <View style={styles.milestonesContainer}>
+          {milestones.map((milestone, index) => (
+            <View key={index} style={styles.milestone}>
+              <Text style={styles.milestoneLabel}>{milestone.label}</Text>
+              <Text style={styles.milestonePoints}>{milestone.points} pts</Text>
+            </View>
+          ))}
+        </View>
+
+        {/* Progress bar */}
+        <ProgressBar 
+          progress={progress} 
+          color="#1E90FF" 
+          style={styles.progressBar}
+        />
+
+        {/* Points info */}
+        <Text style={styles.pointsText}>
+          {user.points} / {nextMilestone.points} pts to {nextMilestone.label} level
+        </Text>
+      </View>
     </View>
   );
 };
@@ -29,7 +77,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#f2f2f2',
     padding: 20,
   },
@@ -47,10 +94,10 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 5,
   },
-  email: {
+  username: {
     fontSize: 16,
     color: '#666',
-    marginBottom: 20,
+    marginBottom: 5,
   },
   button: {
     backgroundColor: '#1E90FF',
@@ -68,6 +115,46 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  timelineContainer: {
+    marginTop: 30,
+    width: '100%',
+    alignItems: 'center',
+  },
+  rewardsHeader: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
+  },
+  milestonesContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  milestone: {
+    alignItems: 'center',
+  },
+  milestoneLabel: {
+    fontSize: 14,
+    color: '#555',
+    fontWeight: '600',
+  },
+  milestonePoints: {
+    fontSize: 12,
+    color: '#888',
+  },
+  progressBar: {
+    height: 10,
+    borderRadius: 5,
+    width: '100%',
+    marginBottom: 10,
+  },
+  pointsText: {
+    fontSize: 16,
+    color: '#333',
   },
 });
 

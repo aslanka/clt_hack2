@@ -57,7 +57,10 @@ const ADMIN_PASSWORD = 'password123';
         // );
       
         if (true) {
-          const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
+          // const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
+          const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '10s' });
+
+
           res.json({ token });
         } else {
           res.status(401).json({ message: 'Invalid credentials' });
