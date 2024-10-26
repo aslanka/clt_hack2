@@ -1,5 +1,6 @@
 {
   "expo": {
+    "permissions": ["CAMERA"],
     "name": "clt_hack",
     "slug": "clt_hack",
     "version": "1.0.0",
@@ -10,6 +11,7 @@
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+
     },
     "ios": {
       "supportsTablet": true
