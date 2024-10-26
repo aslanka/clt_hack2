@@ -1,48 +1,72 @@
-const User = require('../models/User');
+const Activity = require('../models/Activity');
 
-// Controller method to create a new user
-const createUser = (req, res) => {
-    const { username, email, password } = req.body;
-    const passwordHash = hashPassword(password); // Assume you have a function to hash the password
-
-    User.create(username, email, passwordHash, (err, result) => {
+// Controller to add a new activity
+const addActivity = (req, res) => {
+    const { activity_name, description, points } = req.body;
+    Activity.add(activity_name, description, points, (err, result) => {
         if (err) {
             console.error(err);
-            return res.status(500).json({ error: 'Failed to create user' });
+            return res.status(500).json({ error: 'Failed to add activity' });
         }
-        res.status(201).json({ message: 'User created successfully', userId: result.insertId });
+        res.status(201).json({ message: 'Activity added successfully' });
     });
 };
 
-// Controller method to find a user by ID
-const getUserById = (req, res) => {
-    const { userId } = req.params;
-
-    User.findById(userId, (err, user) => {
+// Controller to get all activities
+const getAllActivities = (req, res) => {
+    Activity.getAll((err, activities) => {
         if (err) {
             console.error(err);
-            return res.status(500).json({ error: 'Failed to retrieve user' });
+            return res.status(500).json({ error: 'Failed to retrieve activities' });
         }
-        if (!user.length) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-        res.status(200).json(user[0]);
+        res.status(200).json(activities);
     });
 };
 
-// Controller method to retrieve all users
-const getAllUsers = (req, res) => {
-    User.getAll((err, users) => {
+// Controller to get an activity by ID
+const getActivityById = (req, res) => {
+    const { activity_id } = req.params;
+    Activity.findById(activity_id, (err, activity) => {
         if (err) {
             console.error(err);
-            return res.status(500).json({ error: 'Failed to retrieve users' });
+            return res.status(500).json({ error: 'Failed to retrieve activity' });
         }
-        res.status(200).json(users);
+        if (!activity.length) {
+            return res.status(404).json({ error: 'Activity not found' });
+        }
+        res.status(200).json(activity[0]);
+    });
+};
+
+// Controller to update an activity by ID
+const updateActivity = (req, res) => {
+    const { activity_id } = req.params;
+    const { activity_name, description, points } = req.body;
+    Activity.update(activity_id, activity_name, description, points, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Failed to update activity' });
+        }
+        res.status(200).json({ message: 'Activity updated successfully' });
+    });
+};
+
+// Controller to delete an activity by ID
+const deleteActivity = (req, res) => {
+    const { activity_id } = req.params;
+    Activity.delete(activity_id, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Failed to delete activity' });
+        }
+        res.status(200).json({ message: 'Activity deleted successfully' });
     });
 };
 
 module.exports = {
-    createUser,
-    getUserById,
-    getAllUsers
+    addActivity,
+    getAllActivities,
+    getActivityById,
+    updateActivity,
+    deleteActivity
 };
