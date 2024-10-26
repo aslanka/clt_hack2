@@ -3,17 +3,19 @@ import React, { useContext, useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
-import Feed from './Feed'
+import ActivityScreen from './ActivityScreen'
 
 const LoginScreen = () => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
   const { login } = useContext(AuthContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+
+  
   const handleLogin = () => {
     login(username, password);
-    navigation.navigate('Feed')
+    navigation.navigate('ActivityScreen')
   };
 
   return (
