@@ -6,7 +6,7 @@ const ProfileScreen = () => {
   const user = {
     name: 'Dhruv Mukherjee',
     username: 'dmukherjee',
-    avatar: 'https://example.com/path/to/avatar.jpg',
+    avatar: 'https://media.licdn.com/dms/image/v2/D4E03AQGFyVLZI01tfg/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1707934528588?e=1735171200&v=beta&t=p_TWpA-7oZWLBC6-POxRyVuRG6anfGxUqI2ZvLXB7TM',
     year: 'Junior',
     points: 120 // Example: user's current points
   };
@@ -32,20 +32,21 @@ const ProfileScreen = () => {
     <View style={styles.container}>
       <Image source={{ uri: user.avatar }} style={styles.avatar} />
       <Text style={styles.name}>{user.name}</Text>
-      <Text style={styles.username}>{user.username}</Text>
+      {/* <Text style={styles.username}>{user.username}</Text> */}
       <Text style={styles.username}>{user.year}</Text>
 
-      <TouchableOpacity style={styles.button} onPress={() => alert('Edit Profile')}>
+      {/* <TouchableOpacity style={styles.button} onPress={() => alert('Edit Profile')}>
         <Text style={styles.buttonText}>Edit Profile</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={[styles.button, styles.logoutButton]} onPress={() => alert('Logged Out')}>
         <Text style={styles.buttonText}>Log Out</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       {/* Rewards Timeline */}
       <View style={styles.timelineContainer}>
-        <Text style={styles.rewardsHeader}>Rewards Timeline</Text>
+          
+        <Text style={styles.rewardsHeader}>My Rewards</Text>
         
         {/* Milestone stops */}
         <View style={styles.milestonesContainer}>
@@ -57,17 +58,19 @@ const ProfileScreen = () => {
           ))}
         </View>
 
-        {/* Progress bar */}
-        <ProgressBar 
+        <View style={{ width: '90%', marginBottom: 10 }}>
+         <ProgressBar 
           progress={progress} 
-          color="#1E90FF" 
-          style={styles.progressBar}
-        />
+          color='#3ca832' 
+          style={[styles.progressBar, { width: '100%', height: 8 }]} 
+          />
+</View>
 
         {/* Points info */}
-        <Text style={styles.pointsText}>
-          {user.points} / {nextMilestone.points} pts to {nextMilestone.label} level
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ fontSize: 18, marginRight: 5 }}>🔥</Text>
+          <Text style={styles.pointsText}>{user.points} / {nextMilestone.points} pts to {nextMilestone.label} level</Text>
+</View>
       </View>
     </View>
   );
@@ -78,7 +81,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#f2f2f2',
-    padding: 20,
+    paddingTop: 80,
   },
   avatar: {
     width: 100,
@@ -141,6 +144,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#555',
     fontWeight: '600',
+    
   },
   milestonePoints: {
     fontSize: 12,
@@ -151,6 +155,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: '100%',
     marginBottom: 10,
+    color: '#3ca832'
   },
   pointsText: {
     fontSize: 16,
