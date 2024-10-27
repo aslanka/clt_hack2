@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-
+import SignupScreen from './screens/SignupScreen'; 
 import MainTabs from './screens/MainTabs';
 
 import LoginScreen from './screens/LoginScreen';
@@ -41,11 +41,11 @@ const AppNavigator = () => {
             component={LoginScreen}
             options={{ headerShown: false }}
           />
-          {/* <Stack.Screen
+          <Stack.Screen
             name="SignUp"
-            component={SignUpScreen}
+            component={SignupScreen}
             options={{ title: 'Sign Up' }}
-          /> */}
+          />
         </>
       )}
     </Stack.Navigator>

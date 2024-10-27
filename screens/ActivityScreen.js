@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, Image, Platform } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, Image, Platform, SafeAreaView } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
@@ -160,7 +160,9 @@ const ActivityScreen = () => {
   );
 
   return (
+    
     <View style={styles.container}>
+    <SafeAreaView>
       <Text style={styles.header}>Activity Log</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#1E90FF" />
@@ -176,7 +178,9 @@ const ActivityScreen = () => {
       <TouchableOpacity style={styles.addButton}>
         <Ionicons name="add-circle" size={50} color="#1E90FF" />
       </TouchableOpacity>
+      </SafeAreaView>
     </View>
+    
   );
 };
 const styles = StyleSheet.create({
