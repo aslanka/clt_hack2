@@ -1,23 +1,29 @@
-const { Configuration, OpenAIApi } = require('openai');
-const fs = require('fs');
+import OpenAI from "openai";
+import fs from "fs";
 
-const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
+// Initialize OpenAI instance
+const openai = new OpenAI();
 
 const validateActivityDescription = async (activityPrompt, imagePath) => {
-    const imageBuffer = fs.readFileSync(imagePath);
+    // Assuming image is hosted at an accessible URL; otherwise, upload and get URL
+    const image_url = "https://example.com/path/to/your/image.jpg"; // Replace with actual hosted image URL
 
-    const response = await openai.createChatCompletion({
-        model: 'gpt-4',
+    const response = await openai.chat.completions.create({
+        model: "gpt-4o-mini", // or your preferred model
         messages: [
-            { role: 'system', content: 'You are an AI that checks if an image matches the description given.' },
-            { role: 'user', content: `Does this image match the activity: ${activityPrompt}` },
+            {
+                role: "user",
+                content: [
+                    { type: "text", text: `Does this image match the activity: ${activityPrompt}?` },
+                    { type: "image_url", image_url: { url: image_url } }
+                ],
+            },
         ],
-        file: imageBuffer,
     });
-    return response.data.choices[0].message.content;
+
+    // Log the response
+    console.log(response.choices[0].message.content);
+    return response.choices[0].message.content;
 };
 
-module.exports = { validateActivityDescription };
+validateActivityDescription("A nature walk in a scenic area", "path/to/your/image.jpg");
