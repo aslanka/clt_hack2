@@ -1,23 +1,37 @@
 // screens/LoginScreen.js
-import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useContext, useState} from 'react';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import ActivityScreen from './ActivityScreen'
-
+import axiosInstance from '../api/axiosInstance'
 const LoginScreen = () => {
 
-  const { login } = useContext(AuthContext);
+  const { signIn } = useContext(AuthContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
 
-
   
-  const handleLogin = () => {
-    login(username, password);
-
-
+  const handleLogin = async () => {
+    console.log('Clicked on log in')
+    try {
+      const response = await axiosInstance.post('/login', {
+        username,
+        password,
+      });
+      console.log(response.data)
+      // Assuming your AuthContext has a method to store the token
+      signIn(response.data.token, response.data.userId);
+    } catch (error) {
+      if (error.response) {
+        // Handle specific errors returned from the backend
+        Alert.alert('Login Failed', error.response.data.message || 'An error occurred');
+      } else {
+        // Handle network or other errors
+        Alert.alert('Login Failed', 'An error occurred. Please try again.');
+      }
+    }
   };
 
   return (

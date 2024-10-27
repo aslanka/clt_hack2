@@ -1,27 +1,38 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // For icons, make sure to install Expo vector icons
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import axiosInstance from '../api/axiosInstance'; // Ensure the correct path to your axios instance
 
 const ActivityScreen = () => {
-  const activities = [
-    { id: '1', title: 'Morning Jog', description: 'Jogged 3 miles in the park', date: 'Oct 20, 2024', status: 'Completed' },
-    { id: '2', title: 'React Native Coding', description: 'Worked on Activity Screen design', date: 'Oct 21, 2024', status: 'In Progress' },
-    { id: '3', title: 'Data Visualization', description: 'Exploring data insights in Tableau', date: 'Oct 22, 2024', status: 'Pending' },
-    // Add more activities as needed
-  ];
+  const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch activities from the backend
+  useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        const response = await axiosInstance.get('/activities/all'); // Update with your actual endpoint
+        setActivities(response.data);
+      } catch (error) {
+        console.error(error);
+        Alert.alert('Error', 'Failed to load activities');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchActivities();
+  }, []);
 
   const renderItem = ({ item }) => (
     <View style={styles.activityCard}>
       <View style={styles.cardHeader}>
         <Ionicons name="checkmark-circle" size={24} color={item.status === 'Completed' ? '#27ae60' : '#f39c12'} />
-        <Text style={styles.activityTitle}>{item.title}</Text>
+        <Text style={styles.activityTitle}>{item.activity_name}</Text>
       </View>
       <Text style={styles.activityDescription}>{item.description}</Text>
       <View style={styles.cardFooter}>
-        <Text style={styles.activityDate}>{item.date}</Text>
-        <Text style={[styles.activityStatus, item.status === 'Completed' ? styles.completed : styles.inProgress]}>
-          {item.status}
-        </Text>
+        <Text style={styles.activityPoints}>Points: {item.points}</Text>
       </View>
     </View>
   );
@@ -29,13 +40,17 @@ const ActivityScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Activity Log</Text>
-      <FlatList
-        data={activities}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.listContainer}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#1E90FF" />
+      ) : (
+        <FlatList
+          data={activities}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.activity_id.toString()}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.listContainer}
+        />
+      )}
       <TouchableOpacity style={styles.addButton}>
         <Ionicons name="add-circle" size={50} color="#1E90FF" />
       </TouchableOpacity>
@@ -47,6 +62,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f4f6f8',
+
   },
   header: {
     fontSize: 26,
@@ -94,19 +110,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  activityDate: {
-    fontSize: 12,
-    color: '#888',
-  },
-  activityStatus: {
+  activityPoints: {
     fontSize: 14,
     fontWeight: 'bold',
-  },
-  completed: {
     color: '#27ae60',
-  },
-  inProgress: {
-    color: '#f39c12',
   },
   addButton: {
     position: 'absolute',

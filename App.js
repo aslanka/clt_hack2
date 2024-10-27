@@ -20,7 +20,7 @@ const AppNavigator = () => {
 
 
   return (
-    <Stack.Navigator initialRouteName={userToken ? "Main" : "LoginScreen"}>
+    <Stack.Navigator initialRouteName="LoginScreen">
       {userToken ? (
         <>
           <Stack.Screen
