@@ -189,6 +189,7 @@ const ProfileScreen = () => {
   const [user, setUser] = useState(null); // Initialize user state
   const [loading, setLoading] = useState(true); // Loading state
   const { signOut, userId } = useContext(AuthContext);
+  const [user_points, setUserPoints] = useState({});
   const n = 3;
   // Rewards milestones
   const milestones = [
@@ -203,9 +204,11 @@ const ProfileScreen = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        console.log('nnnnnnnnnnnnnn', userId)
-        const response = await axiosInstance.get(`users/${parseInt(userId, 10)}`); // Adjust the endpoint as needed
-        console.log("RESPONSE", response.data);
+
+        const response = await axiosInstance.get(`users/${parseInt(userId, 10)}`);
+        const points = await axiosInstance.get(`totalpoints/${parseInt(userId, 10)}`);
+
+        setUserPoints(points.data)
         setUser(response.data); // Set the user data from the response
       } catch (error) {
         console.error('Error fetching user data:', error);
