@@ -15,7 +15,7 @@ const userRoutes = require('./routes/userRoutes');
 const activityRoutes = require('./routes/activityRoutes');
 const rewardRoutes = require('./routes/rewardRoutes');
 const userPointsRoutes = require('./routes/userPointsRoutes');
-const chatRoutes = require("./routes/chatRoutes");
+const chatRoutes = require('./routes/chatRoutes');
 
 const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require("@google/generative-ai");
 
@@ -74,7 +74,7 @@ app.use('/users', userRoutes);
 app.use('/activities', activityRoutes);
 app.use('/rewards', rewardRoutes);
 app.use('/userPoints', userPointsRoutes);
-app.use("/api", chatRoutes);
+app.use('/api', chatRoutes);
 
 
 function verifyToken(req, res, next) {
