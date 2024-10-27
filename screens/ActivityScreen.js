@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, SafeAreaView} from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, Image, Platform } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import axiosInstance from '../api/axiosInstance'; // Ensure the correct path to your axios instance
 
 const ActivityScreen = () => {
@@ -24,6 +26,117 @@ const ActivityScreen = () => {
     fetchActivities();
   }, []);
 
+  // Handle selecting or taking an image
+  const pickImage = async (activityId) => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      Alert.alert("Permission to access camera roll is required!");
+      return;
+    }
+  
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+  
+    if (!result.canceled) {
+      if (result.assets && result.assets.length > 0) {
+        const imageUri = result.assets[0].uri;
+        console.log('ImagePicker Result URI:', imageUri);
+        handleCompleteActivity(activityId, imageUri);
+      } else {
+        console.log('No assets found');
+      }
+    } else {
+      console.log('ImagePicker was canceled');
+    }
+  };
+
+
+
+  // const handleCompleteActivity = async (activityId, imageUri) => {
+  //   console.log('Image URI:', imageUri);
+  
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("image", {
+  //       uri: Platform.OS === 'ios' ? imageUri.replace('file://', '') : imageUri,
+  //       name: 'activity_image.jpg',
+  //       type: 'image/jpeg',
+  //     });
+  
+  //     // Send the image to the server for verification
+  //     const verificationResponse = await axiosInstance.post('/image', formData, {
+  //       headers: { 'Content-Type': 'multipart/form-data' },
+  //     });
+  
+  //     const isRecyclable = verificationResponse.data.description;
+  //     console.log(verificationResponse.data.description);
+  //     // Show a result message based on the verification
+  //     if (isRecyclable === 1) {
+  //       Alert.alert('Success', 'The item in the image is recyclable!');
+  //     } else {
+  //       Alert.alert('Notice', 'The item in the image is not recyclable or unsure.');
+  //     }
+  
+  //     // Update the activity status locally
+  //     setActivities((prevActivities) =>
+  //       prevActivities.map((activity) =>
+  //         activity.activity_id === activityId ? { ...activity, status: 'Completed', imageUri } : activity
+  //       )
+  //     );
+  //   } catch (error) {
+  //     console.error('Error verifying image:', error);
+  //     Alert.alert('Error', 'Failed to verify the image');
+  //   }
+  // };
+
+  const handleCompleteActivity = async (activityId, imageUri) => {
+    console.log('Image URI:', imageUri);
+  
+    // Find the activity by its ID to get the description
+    const activity = activities.find((activity) => activity.activity_id === activityId);
+    const description = activity ? activity.description : '';
+  
+    try {
+      const formData = new FormData();
+      formData.append("image", {
+        uri: Platform.OS === 'ios' ? imageUri.replace('file://', '') : imageUri,
+        name: 'activity_image.jpg',
+        type: 'image/jpeg',
+      });
+      formData.append("description", description); // Include the activity description
+  
+      // Send the image and description to the server for verification
+      const verificationResponse = await axiosInstance.post('/image', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+  
+      const isRecyclable = verificationResponse.data.description;
+      console.log(verificationResponse.data.description);
+      // Show a result message based on the verification
+      if (isRecyclable === 1) {
+        Alert.alert('Success', 'The item in the image is recyclable!');
+      } else {
+        Alert.alert('Notice', 'The item in the image is not recyclable or unsure.');
+      }
+
+      // Update the activity status locally
+      setActivities((prevActivities) =>
+        prevActivities.map((activity) =>
+          activity.activity_id === activityId ? { ...activity, status: 'Completed', imageUri } : activity
+        )
+      );
+    } catch (error) {
+      console.error('Error verifying image:', error);
+      Alert.alert('Error', 'Failed to verify the image');
+    }
+  };
+  
+  
+  
   const renderItem = ({ item }) => (
     <View style={styles.activityCard}>
       <View style={styles.cardHeader}>
@@ -33,13 +146,22 @@ const ActivityScreen = () => {
       <Text style={styles.activityDescription}>{item.description}</Text>
       <View style={styles.cardFooter}>
         <Text style={styles.activityPoints}>Points: {item.points}</Text>
+        {item.status !== 'Completed' && (
+          <TouchableOpacity
+            style={styles.completeButton}
+            onPress={() => pickImage(item.activity_id)}
+          >
+            <Text style={styles.completeButtonText}>Complete with Image</Text>
+          </TouchableOpacity>
+        )}
       </View>
+      {item.imageUri && <Image source={{ uri: item.imageUri }} style={styles.activityImage} />}
     </View>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.header}> ♻️Activity Log</Text>
+    <View style={styles.container}>
+      <Text style={styles.header}>Activity Log</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#1E90FF" />
       ) : (
@@ -51,13 +173,12 @@ const ActivityScreen = () => {
           contentContainerStyle={styles.listContainer}
         />
       )}
-      <TouchableOpacity style={styles.addButton} activeOpacity={0.7}>
-        <Ionicons name="add-circle" size={50} color="#27ae60" />
+      <TouchableOpacity style={styles.addButton}>
+        <Ionicons name="add-circle" size={50} color="#1E90FF" />
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -122,6 +243,9 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 5,
   },
+  completeButtonText: {
+    color: '#ffffff'
+  }
 });
 
 export default ActivityScreen;
