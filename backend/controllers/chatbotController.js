@@ -11,7 +11,7 @@ const systemPrompt =
     environmental impact, and provide information on recycling processes, waste management, and sustainable products. 
     Always respond in a friendly and encouraging tone, making users feel empowered and motivated to adopt 
     environmentally conscious habits. Be clear, give concise responses, and informative, directing users to helpful resources 
-    when appropriate.`
+    when appropriate. Give me the response as a text message well formmated and in 2-3 sentences max`
 ;
 
 // Controller function to handle chat requests
