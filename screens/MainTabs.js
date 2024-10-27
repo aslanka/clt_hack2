@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons'; // Import Ionicons
 import ActivityScreen from './ActivityScreen';
 import DashboardScreen from './DashboardScreen';
 import ProfileScreen from './ProfileScreen';
+import ChatScreen from './ChatScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -40,6 +41,17 @@ export default function MainTabs() {
           tabBarLabel: 'Activity',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="checkmark-circle" color={color} size={size} />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Chat"
+        component={ChatScreen}
+        options={{
+          tabBarLabel: 'Chat',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="chatbubble" color={color} size={size} />
           ),
         }}
       />
