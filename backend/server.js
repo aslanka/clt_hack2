@@ -64,6 +64,35 @@
       //     res.status(401).json({ message: 'Invalid credentials' });
       //   }
       // });
+
+      pp.post('/gpt', async (req, res) => {
+
+        try {
+            const response = await openai.chat.completions.create({
+                model: "gpt-4",
+                messages: [
+                    {
+                        role: "user",
+                        content: "Is the item recyclable?",
+                        attachments: [
+                            {
+                                type: "image",
+                                url: "https://kidspressmagazine.com/wp-content/uploads/2014/04/dreamstime_xl_12522351.jpg"
+                            }
+                        ]
+                    }
+                ]
+            });
+            
+            const answer = response.choices[0].message.content;
+            res.status(200).json({ answer });
+        } catch (error) {
+            console.error('Error fetching information:', error);
+            res.status(500).json({ error: 'Failed to get information' });
+        }
+      });
+
+
       app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });

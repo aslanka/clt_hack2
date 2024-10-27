@@ -1,43 +1,43 @@
 const Activity = require('../models/Activity');
 const fs = require('fs');
-const { Configuration, OpenAIApi } = require('openai');
+// const { Configuration, OpenAIApi } = require('openai');
 
-const configuration = new Configuration({
-    apiKey: 'sk-euzNx-wuCXxdasjamIfjt0itriOXzss4fNDEgwQGKjT3BlbkFJEFXoTvmv2RvCebvCp1TsO3-6DwoYZVlYHDpSx-X8cA',
-});
-const openai = new OpenAIApi(configuration);
+// const configuration = new Configuration({
+//     apiKey: 'sk-euzNx-wuCXxdasjamIfjt0itriOXzss4fNDEgwQGKjT3BlbkFJEFXoTvmv2RvCebvCp1TsO3-6DwoYZVlYHDpSx-X8cA',
+// });
+// const openai = new OpenAIApi(configuration);
 
-const validateActivity = async (req, res) => {
-    const { prompt } = req.body;
-    const image = req.file;
+// const validateActivity = async (req, res) => {
+//     const { prompt } = req.body;
+//     const image = req.file;
 
-    if (!image || !prompt) {
-        return res.status(400).json({ error: 'Image and prompt are required' });
-    }
+//     if (!image || !prompt) {
+//         return res.status(400).json({ error: 'Image and prompt are required' });
+//     }
 
-    try {
-        const validationResult = await openai.createChatCompletion({
-            model: 'gpt-3.5-turbo', // Specify the model you want to use
-            messages: [{ role: 'user', content: prompt }],
-            max_tokens: 100,
-        });
+//     try {
+//         const validationResult = await openai.createChatCompletion({
+//             model: 'gpt-3.5-turbo', // Specify the model you want to use
+//             messages: [{ role: 'user', content: prompt }],
+//             max_tokens: 100,
+//         });
 
-        // Extract the content from the response
-        const responseMessage = validationResult.data.choices[0].message.content;
+//         // Extract the content from the response
+//         const responseMessage = validationResult.data.choices[0].message.content;
 
-        // Example condition if validation succeeded
-        if (responseMessage.toLowerCase().includes('yes')) {
-            return res.status(200).json({ message: 'Validation successful! Points added.', success: true });
-        } else {
-            return res.status(200).json({ message: 'Validation failed. Activity not recognized.', success: false });
-        }
-    } catch (error) {
-        console.error('Error during validation:', error);
-        res.status(500).json({ error: 'Validation failed due to server error' });
-    } finally {
-        fs.unlinkSync(image.path); // Clean up uploaded file
-    }
-};
+//         // Example condition if validation succeeded
+//         if (responseMessage.toLowerCase().includes('yes')) {
+//             return res.status(200).json({ message: 'Validation successful! Points added.', success: true });
+//         } else {
+//             return res.status(200).json({ message: 'Validation failed. Activity not recognized.', success: false });
+//         }
+//     } catch (error) {
+//         console.error('Error during validation:', error);
+//         res.status(500).json({ error: 'Validation failed due to server error' });
+//     } finally {
+//         fs.unlinkSync(image.path); // Clean up uploaded file
+//     }
+// };
 
 // Controller to add a new activity
 const addActivity = (req, res) => {
