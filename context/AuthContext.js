@@ -1,66 +1,41 @@
 // context/AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import eventEmitter from '../eventEmitter'; // Ensure this exists or replace/remove it if not needed
+
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [userToken, setUserToken] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState(null); // Add userId state
 
-  // Load token from AsyncStorage when the app starts
   useEffect(() => {
-    const loadToken = async () => {
-      try {
-        const token = await AsyncStorage.getItem('userToken');
-        setUserToken(token);
-      } catch (e) {
-        console.error('Failed to load token', e);
+    const checkToken = async () => {
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        setUserToken(token); // Set userToken if token exists
+      } else {
+        setUserToken(null); // No token, user needs to log in
       }
-      setLoading(false);
-    };
-    loadToken();
-
-    // Listen for logout event
-    const handleLogout = () => {
-      logout();
     };
 
-    eventEmitter.on('logout', handleLogout);
-
-    // Clean up the event listener on unmount
-    return () => {
-      eventEmitter.off('logout', handleLogout);
-    };
+    checkToken();
   }, []);
 
-  // Function to handle login
-  const login = async (token) => {
-    setLoading(true);
-    try {
-      await AsyncStorage.setItem('userToken', token);
-      setUserToken(token);
-    } catch (e) {
-      console.error('Failed to save token', e);
-    }
-    setLoading(false);
+  const signIn = async (token, newUserId) => {
+    await AsyncStorage.setItem('token', token); // Store token
+    setUserToken(token); // Update state
+    setUserId(newUserId);
   };
 
-  // Function to handle logout
-  const logout = async () => {
-    setLoading(true);
-    try {
-      await AsyncStorage.removeItem('userToken');
-      setUserToken(null);
-    } catch (e) {
-      console.error('Failed to remove token', e);
-    }
-    setLoading(false);
+  const signOut = async () => {
+    await AsyncStorage.removeItem('token'); // Remove token
+    setUserToken(null); 
+    setUserId(null);// Update state
   };
 
   return (
-    <AuthContext.Provider value={{ userToken, loading, login, logout }}>
+    <AuthContext.Provider value={{ userToken, userId, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );

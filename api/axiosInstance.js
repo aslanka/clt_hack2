@@ -6,7 +6,7 @@ import { Alert } from 'react-native';
 const backend_url = 'http://localhost:3000'; // Backend URL
 
 const axiosInstance = axios.create({
-  baseURL: backend_url,
+  baseURL: 'http://10.16.70.45:3000',
   headers: {
     'Content-Type': 'application/json',
   },

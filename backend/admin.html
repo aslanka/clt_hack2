@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        #logoutButton {
+            margin-top: 20px;
+            background-color: #d9534f; /* Red for logout */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Admin Panel - Login</h1>
+    <form id="loginForm">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
+
+    <h1>Admin Panel - Add Activity</h1>
+    <form id="activityForm" style="display: none;">
+        <input type="number" id="userId" placeholder="User ID" required>
+        <input type="text" id="activityType" placeholder="Activity Type" required>
+        <input type="text" id="description" placeholder="Description" required>
+        <input type="number" id="points" placeholder="Points" required>
+        <button type="submit">Add Activity</button>
+    </form>
+    
+    <button id="logoutButton" style="display: none;">Logout</button>
+
+    <script src="admin.js"></script>
+</body>
+</html>
