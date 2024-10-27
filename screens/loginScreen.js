@@ -1,6 +1,6 @@
 // screens/LoginScreen.js
 import React, { useContext, useState} from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import ActivityScreen from './ActivityScreen'
@@ -37,7 +37,7 @@ const LoginScreen = () => {
   return (
     
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Image source={require('../assets/logo.png')} style={styles.logo} />
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     color: '#ffffff', // Light text color
   },
   input: {
-    width: '80%',
+    width: '100%',
     height: 50,
     backgroundColor: '#1E1E1E', // Dark input background
     borderRadius: 25, // Rounded input bezels
@@ -85,13 +85,18 @@ const styles = StyleSheet.create({
     color: '#ffffff', // Light text color
   },
   button: {
-    width: '80%',
+    width: '100%',
     height: 50,
     backgroundColor: '#4CAF50', // Green button color
     borderRadius: 25, // Rounded button bezels
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 16,
+  },
+  logo: {
+    width: 350,       // Set width based on the image size and desired display size
+    height: 350,      // Set height based on the image size and desired display size
+    marginBottom: 30, // Spacing between logo and form
   },
   buttonText: {
     color: '#ffffff', // Light text color
