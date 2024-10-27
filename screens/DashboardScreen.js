@@ -17,7 +17,7 @@ const DashboardScreen = () => {
         const formattedActivities = response.data.map((item) => ({
           id: item.activityId.toString(), // Ensure id is a string for keyExtractor
           name: item.username,
-          activity: item.activityName, // Make sure this corresponds to the API response
+          activity: item.actvityName, // Make sure this corresponds to the API response
           date: item.completedAt, // Format the date if necessary
           profilePic: item.profileImage,
         }));

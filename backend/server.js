@@ -138,14 +138,14 @@ const ADMIN_PASSWORD = 'password123';
             }
       
             // Generate JWT token if credentials are valid
-            const token = jwt.sign({ userId: user.user_id }, JWT_SECRET, { expiresIn: '10s' });
+            const token = jwt.sign({ userId: user.user_id }, JWT_SECRET, { expiresIn: '10hr' });
             console.log(user.user_id)
             res.json({ token, userId: user.user_id });
           });
         });
       });
 
-      app.get('/totalpoints/:userId', (req, res) => {
+      app.get('/totalpoints/:userId',  (req, res) => {
         const userId = req.params.userId; // Get the user ID from the request parameters
         const query = `
             SELECT u.user_id, 
