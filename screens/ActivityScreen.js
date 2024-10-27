@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, SafeAreaView} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import axiosInstance from '../api/axiosInstance'; // Ensure the correct path to your axios instance
 
@@ -38,8 +38,8 @@ const ActivityScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Activity Log</Text>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.header}> ♻️Activity Log</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#1E90FF" />
       ) : (
@@ -51,40 +51,38 @@ const ActivityScreen = () => {
           contentContainerStyle={styles.listContainer}
         />
       )}
-      <TouchableOpacity style={styles.addButton}>
-        <Ionicons name="add-circle" size={50} color="#1E90FF" />
+      <TouchableOpacity style={styles.addButton} activeOpacity={0.7}>
+        <Ionicons name="add-circle" size={50} color="#27ae60" />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f4f6f8',
-
+    backgroundColor: '#121212', // Dark background
   },
   header: {
     fontSize: 26,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#ffffff', // Light text color
     textAlign: 'center',
     padding: 20,
-    backgroundColor: '#1E90FF',
-    color: '#fff',
+    backgroundColor: '#121212', // Header background
     marginBottom: 10,
   },
   listContainer: {
     paddingHorizontal: 16,
-    paddingBottom: 50,
+    paddingBottom: 70,
   },
   activityCard: {
-    backgroundColor: '#fff',
+    backgroundColor: '#1E1E1E', // Dark card background
     padding: 16,
     marginVertical: 8,
     borderRadius: 10,
     shadowColor: '#000',
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 5 },
     shadowRadius: 10,
     elevation: 5,
@@ -98,11 +96,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     marginLeft: 8,
-    color: '#1f8ef1',
+    color: '#ffffff', // Light text color
   },
   activityDescription: {
     fontSize: 14,
-    color: '#333',
+    color: '#ccc', // Lighter text color for description
     marginVertical: 8,
   },
   cardFooter: {
@@ -113,15 +111,15 @@ const styles = StyleSheet.create({
   activityPoints: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#27ae60',
+    color: '#27ae60', // Points color
   },
   addButton: {
     position: 'absolute',
     bottom: 20,
     right: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#1E1E1E', // Dark background for the button
     borderRadius: 50,
-    padding: 4,
+    padding: 10,
     elevation: 5,
   },
 });

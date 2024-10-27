@@ -35,6 +35,7 @@ const LoginScreen = () => {
   };
 
   return (
+    
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
       <TextInput
@@ -64,45 +65,36 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#121212', // Dark background
     padding: 16,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 32,
-    color: '#333',
+    color: '#ffffff', // Light text color
   },
   input: {
     width: '80%',
     height: 50,
-    backgroundColor: '#fff',
-    borderRadius: 8,
+    backgroundColor: '#1E1E1E', // Dark input background
+    borderRadius: 25, // Rounded input bezels
     paddingHorizontal: 16,
     marginBottom: 16,
     fontSize: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
+    color: '#ffffff', // Light text color
   },
   button: {
     width: '80%',
     height: 50,
-    backgroundColor: '#4CAF50',
-    borderRadius: 8,
+    backgroundColor: '#4CAF50', // Green button color
+    borderRadius: 25, // Rounded button bezels
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 5,
     marginTop: 16,
   },
   buttonText: {
-    color: '#fff',
+    color: '#ffffff', // Light text color
     fontSize: 18,
     fontWeight: 'bold',
   },
