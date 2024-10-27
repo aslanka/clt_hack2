@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 
+const SERVER_URL = 'http://10.16.69.24:3000'; // Replace with your server's IP and port
+
 const Chatbot = () => {
   const [messages, setMessages] = useState([]); // Store chat history
   const [input, setInput] = useState(''); // Store current user input
@@ -11,29 +13,37 @@ const Chatbot = () => {
   const sendMessage = async () => {
     if (input.trim() === '') return; // Do nothing if input is empty
 
-    // Add user message to chat history
-    const newMessage = { id: messages.length, text: input, sender: 'user' };
-    setMessages([...messages, newMessage]);
-
-    setInput(''); // Clear input field
     setLoading(true); // Show loading indicator
+
+    // Add user message to chat history
+    setMessages((prevMessages) => {
+      const newMessage = { id: prevMessages.length, text: input, sender: 'user' };
+      return [...prevMessages, newMessage];
+    });
+
+    const userInput = input; // Save input for async operation
+    setInput(''); // Clear input field
 
     try {
       // Make a request to the AI chatbot endpoint
-      const response = await axios.post('http://10.16.69.24:3000/api/chat', {
-        userPrompt: input, // Send the user's message as `userPrompt`
+      const response = await axios.post(`${SERVER_URL}/api/chat`, {
+        userPrompt: userInput, // Send the user's message as `userPrompt`
       });
 
       // Get the AI response from the server
       const botMessage = response.data.response || 'Sorry, I did not understand that.';
 
       // Add AI message to chat history
-      const newBotMessage = { id: messages.length + 1, text: botMessage, sender: 'bot' };
-      setMessages((prevMessages) => [...prevMessages, newBotMessage]);
+      setMessages((prevMessages) => {
+        const newBotMessage = { id: prevMessages.length, text: botMessage, sender: 'bot' };
+        return [...prevMessages, newBotMessage];
+      });
     } catch (error) {
       console.error('Error communicating with AI:', error);
-      const errorMessage = { id: messages.length + 1, text: 'Error communicating with AI.', sender: 'bot' };
-      setMessages((prevMessages) => [...prevMessages, errorMessage]);
+      setMessages((prevMessages) => {
+        const errorMessage = { id: prevMessages.length, text: 'Error communicating with AI.', sender: 'bot' };
+        return [...prevMessages, errorMessage];
+      });
     } finally {
       setLoading(false); // Hide loading indicator
     }
@@ -42,7 +52,10 @@ const Chatbot = () => {
   // Render each message bubble
   const renderMessage = ({ item }) => (
     <View style={[styles.messageContainer, item.sender === 'user' ? styles.userMessage : styles.botMessage]}>
-      <Text style={styles.messageText}>{item.text}</Text>
+        <Text>nnnnn</Text>
+      <Text style={item.sender === 'user' ? styles.messageText : styles.botMessageText}>
+        {item.text}
+      </Text>
     </View>
   );
 
@@ -97,12 +110,16 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 0,
   },
   botMessage: {
-    backgroundColor: '#e1e1e1',
+    backgroundColor: '#e1e1e1', // Light gray background
     alignSelf: 'flex-start',
     borderTopLeftRadius: 0,
   },
   messageText: {
-    color: '#fff',
+    color: '#fff', // White text for user messages
+    fontSize: 16,
+  },
+  botMessageText: {
+    color: '#000', // Black text for bot messages
     fontSize: 16,
   },
   inputContainer: {

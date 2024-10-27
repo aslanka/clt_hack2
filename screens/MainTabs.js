@@ -49,7 +49,7 @@ export default function MainTabs() {
         name="Chatbot"
         component={ChatBot}
         options={{
-          tabBarLabel: 'Chat',
+          tabBarLabel: 'Chatbot',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="checkmark-circle" color={color} size={size} />
           ),
