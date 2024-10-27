@@ -12,6 +12,9 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera to take photos for activities."
+      },
       "supportsTablet": true
     },
     "android": {
