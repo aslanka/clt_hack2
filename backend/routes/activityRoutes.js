@@ -17,4 +17,7 @@ router.put('/:activity_id', activityController.updateActivity);
 // Route to delete an activity by ID
 router.delete('/:activity_id', activityController.deleteActivity);
 
+router.post('/validate', activityController.validateActivity);
+
+
 module.exports = router;

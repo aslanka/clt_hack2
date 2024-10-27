@@ -1,5 +1,6 @@
     // server.js
     const express = require('express');
+    const multer = require('multer');
     const bodyParser = require('body-parser');
     const cors = require('cors');
     const jwt = require('jsonwebtoken');
@@ -12,22 +13,22 @@
 
     // Initialize the app
     const app = express();
+    const upload = multer({ dest: 'uploads/' }); // Store uploaded images temporarily
 
-    // Set the port from environment variable or default to 3000
-    const PORT = 3000;
+// Set the port from environment variable or default to 3000
+    const PORT = process.env.PORT || 3000;
+    const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
 
-    const JWT_SECRET = 'your_jwt_secret_key';
-
-
-    // Middleware to parse JSON requests
+// Middleware to parse JSON requests
     app.use(express.json());
-
     app.use(cors());
     app.use(bodyParser.json());
+
+// Define routes
     app.use('/users', userRoutes);
-    app.use('/activities', activityRoutes); 
-    app.use('/rewards', rewardRoutes); 
-    app.use('/userPoints', userPointsRoutes);
+    app.use('/activities', upload.single('image'), activityRoutes); // Adds multer middleware for image upload on activity routes
+    app.use('/rewards', rewardRoutes);
+    app.use('/userPoints', userPointsRoutes); 
   
 
     function verifyToken(req, res, next) {
