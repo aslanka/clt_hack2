@@ -226,6 +226,90 @@ app.post('/admin/login', (req, res) => {
   }
 });
 
+app.get('/totalpoints/:userId', (req, res) => {
+  const userId = req.params.userId; // Get the user ID from the request parameters
+  const query = `
+      SELECT u.user_id, 
+             u.username, 
+             u.full_name, 
+             SUM(ap.points) AS total_points
+      FROM User u
+      JOIN User_Points ap ON u.user_id = ap.user_id
+      WHERE u.user_id = ?
+      GROUP BY u.user_id, u.username, u.full_name;
+  `;
+
+  // Execute the query
+  db.query(query, [userId], (error, results) => {
+      if (error) {
+          console.error('Error fetching user points:', error);
+          return res.status(500).json({ error: 'Internal server error' });
+      }
+      
+      if (results.length === 0) {
+          return res.status(404).json({ error: 'User not found' }); // Handle case where user is not found
+      }
+
+      // Send the results as a JSON response
+      const totalPoints = parseInt(results[0].total_points, 10);
+      res.json(totalPoints); // Send the first (and only) result as the response
+  });
+});
+
+
+app.get('/leaderboard', (req, res) => {
+  const query = `
+      SELECT u.user_id, 
+             u.username, 
+             u.full_name, 
+             SUM(ap.points) AS total_points
+      FROM User u
+      JOIN User_Points ap ON u.user_id = ap.user_id
+      GROUP BY u.user_id, u.username, u.full_name
+      ORDER BY total_points DESC
+      LIMIT 5;
+  `;
+
+  // Execute the query
+  db.query(query, (error, results) => {
+      if (error) {
+          console.error('Error fetching leaderboard:', error);
+          return res.status(500).json({ error: 'Internal server error' });
+      }
+      // Send the results as a JSON response
+      res.json(results);
+  });
+});
+
+app.get('/recent-activities', (req, res) => {
+  const query = `
+    SELECT u.user_id, u.username, u.profile_uri, up.activity_id, up.points, up.completed_at
+    FROM User_Points up
+    JOIN User u ON up.user_id = u.user_id
+    ORDER BY up.completed_at DESC
+    LIMIT 10;  -- adjust the limit as needed
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database query error' });
+    }
+
+    // Format the response
+    const activities = results.map(activity => ({
+      userId: activity.user_id,
+      username: activity.username,
+      profileImage: activity.profile_uri,
+      activityId: activity.activity_id,
+      points: activity.points,
+      completedAt: activity.completed_at,
+    }));
+
+    res.json(activities);
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
